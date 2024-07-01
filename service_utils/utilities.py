@@ -7,7 +7,8 @@ from selenium.webdriver.chrome.options import Options
 
 
 class ServiceUtils:
-    def get_logger(self):
+    @staticmethod
+    def get_logger():
         logger_name = inspect.stack()[1][3]
         logger = logging.getLogger(logger_name)
         file_handler = logging.FileHandler('logfile.log')
@@ -23,9 +24,12 @@ class ServiceUtils:
 class WebDriverManager:
     def __init__(self):
         chromedriver_autoinstaller.install()
+        self.log = ServiceUtils.get_logger()
 
     def open_url(self, url):
         self.driver.get("https://coins.bank.gov.ua/")
+        self.log.log(f"The page {url} was opened")
+
     def get_driver(self):
         chrome_options = Options()
         chrome_options.add_experimental_option("detach", True)

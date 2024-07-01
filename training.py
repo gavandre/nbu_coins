@@ -8,16 +8,19 @@
 # driver.get("https://coins.bank.gov.ua/")
 from page_obects.home_page import HomePage
 from page_obects.login_page import LoginPage
-from service_utils.utilities import ServiceUtils, WebDriverManager
+from page_obects.registration_page import RegistrationPage
+from service_utils.utilities import WebDriverManager
+from test_data.test_data import CabinetLogin
 
 driver = WebDriverManager().get_driver()
-driver.get("https://coins.bank.gov.ua/")
+driver.get(CabinetLogin.url)
 home_page = HomePage(driver)
 home_page.click_cabinet_btn()
 login_page = LoginPage(driver)
-login_page.input_email("gavandre@gmail.com")
-login_page.input_password("MyF@ther1959")
-login_page.press_login()
+login_page.input_email(CabinetLogin.email)
+login_page.input_password(CabinetLogin.password)
+login_page.press_login_button()
+
 #home_page.cabinet.input_email("adfadfdfd")
-home_page.click_cabinet_btn()
+#home_page.click_cabinet_btn()
 driver.quit()

@@ -1,7 +1,9 @@
+from pypom import Page
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
+
 from page_obects.login_page import LoginPage
 from service_utils.utilities import ServiceUtils
-from pypom import Page
 
 
 class HomePage(Page):
@@ -15,10 +17,20 @@ class HomePage(Page):
     def __init__(self, driver):
         super().__init__(driver)
         self.cabinet = LoginPage(self.driver)
+        self.log = ServiceUtils.get_logger()
 
     def click_logo_btn(self):
-        return self.driver.find_element(*self.logo_button).click()
+        try:
+            result = self.driver.find_element(*self.logo_button)
+            result.click()
+            self.log.info("The logo button was clicked successfully")
+        except NoSuchElementException as error:
+            self.log.info(f"The log button wasn't clicked do to {error} exception")
 
     def click_cabinet_btn(self):
-        self.driver.find_element(*self.cabinet_button).click()
-        #return LoginPage(self.driver)
+        try:
+            result = self.driver.find_element(*self.cabinet_button)
+            result.click()
+            self.log.info("The cabinet icon was clicked successfully")
+        except NoSuchElementException as error:
+            self.log.info(f"Could not click on cabinet icon due to {error} exception")
