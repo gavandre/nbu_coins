@@ -28,7 +28,7 @@ class WebDriverManager:
 
     def open_url(self, url):
         self.driver.get("https://coins.bank.gov.ua/")
-        self.log.log(f"The page {url} was opened")
+        self.log.info(f"The page {url} was opened")
 
     def get_driver(self):
         chrome_options = Options()
