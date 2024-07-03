@@ -7,6 +7,7 @@ class RegistrationPage:
     fathers_name_field = (By.CSS_SELECTOR, "input[placeholder='По батькові*']")
     email_field = (By.CSS_SELECTOR, "#email_address")
     receive_code_button = (By.XPATH, "(//div[@id='email-verification-link'])[1]")
+
     def __init__(self, driver):
         self.driver = driver
 
