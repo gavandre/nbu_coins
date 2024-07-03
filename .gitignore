@@ -8,4 +8,3 @@ sdk/__pycache__/
 service_utils/__pycache__/
 test_data/__pycache__/
 # Ignore logfile
-logfile.log
