@@ -2,11 +2,11 @@
 .venv/
 
 # Ignore pycache
-*.pyc
-page_obects/__pycache__/
-sdk/__pycache__/
-service_utils/__pycache__/
-test_data/__pycache__/
+#*.pyc
+#page_obects/__pycache__/
+#sdk/__pycache__/
+#service_utils/__pycache__/
+#test_data/__pycache__/
 
 # Ignore logfile
 logfile.log
