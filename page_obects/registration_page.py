@@ -1,3 +1,4 @@
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 
@@ -11,16 +12,16 @@ class RegistrationPage:
     def __init__(self, driver):
         self.driver = driver
 
-    def input_lastname(self, value):
+    def input_lastname(self, value: str):
         self.driver.find_element(*self.lastname_field).send_keys(value)
 
-    def input_name(self, value):
+    def input_name(self, value: str):
         self.driver.find_element(*self.name_field).send_keys(value)
 
-    def input_fathers_name(self, value):
+    def input_fathers_name(self, value: str):
         self.driver.find_element(*self.fathers_name_field).send_keys(value)
 
-    def input_email(self, value):
+    def input_email(self, value: str):
         self.driver.find_element(*self.email_field).send_keys(value)
 
     def press_receive_code_button(self):
