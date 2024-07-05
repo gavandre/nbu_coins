@@ -20,12 +20,12 @@ class MemorableCoinsPage:
         try:
             items = self.driver.find_elements(*self.product_item)
             self.log.info("The list of elements was detected successfully")
-            locator_index_count = 1
+            locator_index = 1
             for item in items:
                 try:
                     item_element = item.find_element(By.XPATH, self.child_text_item).text
                     if coin_name in item_element:
-                        product_item = self.driver.find_element(By.XPATH, self.picked_item + f"[{locator_index_count}]")
+                        product_item = self.driver.find_element(By.XPATH, self.picked_item + f"[{locator_index}]")
                         hover = ActionChains(self.driver).move_to_element(product_item)
                         hover.perform()
                         icon_button = item.find_element(By.XPATH, self.child_bucket_icon_item)
@@ -36,7 +36,7 @@ class MemorableCoinsPage:
                                 continue
                         break
                     elif coin_name not in item_element:
-                        locator_index_count += 1
+                        locator_index += 1
                         continue
                     else:
                         break
