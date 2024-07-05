@@ -1,4 +1,4 @@
-from selenium.common import NoSuchElementException
+from selenium.common import NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
 from page_obects.registration_page import RegistrationPage
@@ -40,7 +40,7 @@ class LoginPage:
             result = self.driver.find_element(*self.login_button)
             result.click()
             self.log.info("Login button was pressed successfully")
-        except NoSuchElementException as error:
+        except (NoSuchElementException, ElementClickInterceptedException) as error:
             self.log.info(f"Could not press login button due to {error} exception")
 
     def press_register_button(self):
