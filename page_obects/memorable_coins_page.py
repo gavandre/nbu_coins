@@ -1,8 +1,11 @@
-from selenium.common import NoSuchElementException
+import time
+
+from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
 from service_utils.utilities import ServiceUtils
+from test_data.test_data import TextMessages
 
 
 class MemorableCoinsPage:
@@ -17,6 +20,7 @@ class MemorableCoinsPage:
         self.log = ServiceUtils.get_logger()
 
     def coin_picker(self, coin_name: str):
+        global icon_button
         try:
             items = self.driver.find_elements(*self.product_item)
             self.log.info("The list of elements was detected successfully")
@@ -25,16 +29,20 @@ class MemorableCoinsPage:
                 try:
                     item_element = item.find_element(By.XPATH, self.child_text_item).text
                     if coin_name in item_element:
-                        product_item = self.driver.find_element(By.XPATH, self.picked_item + f"[{locator_index}]")
-                        hover = ActionChains(self.driver).move_to_element(product_item)
-                        hover.perform()
-                        icon_button = item.find_element(By.XPATH, self.child_bucket_icon_item)
-                        while True:
-                            if icon_button.is_enabled():
+                        t_end = time.time() + 60 * 15
+                        while time.time() < t_end:
+                            product_item = self.driver.find_element(By.XPATH, self.picked_item + f"[{locator_index}]")
+                            hover = ActionChains(self.driver).move_to_element(product_item)
+                            hover.perform()
+                            try:
+                                icon_button = item.find_element(By.XPATH, self.child_bucket_icon_item)
+                            except (NoSuchElementException, StaleElementReferenceException):
+                                pass
+                            if icon_button.get_attribute('title'):
+                                self.driver.refresh()
+                            elif icon_button.get_attribute('title'):
                                 icon_button.click()
-                            else:
-                                continue
-                        break
+                                break
                     elif coin_name not in item_element:
                         locator_index += 1
                         continue
