@@ -62,3 +62,15 @@ class LoginPage:
         except NoSuchElementException as error:
             self.log.info("Could not press Register button")
             return OperationResult.FAILURE
+
+    def full_login_to_account(self, email, password):
+        self.input_email(email)
+        self.input_password(password)
+        self.press_login_button()
+
+    def presence_of_login_page(self):
+        email = self.driver.find_element(*self.email_field)
+        password = self.driver.find_element(*self.password_field)
+        login_button = self.driver.find_element(*self.login_button)
+        if email and password and login_button:
+            return True

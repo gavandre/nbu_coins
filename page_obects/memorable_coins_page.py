@@ -4,8 +4,9 @@ from selenium.common import NoSuchElementException, StaleElementReferenceExcepti
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
+from page_obects.login_page import LoginPage
 from service_utils.utilities import ServiceUtils
-from test_data.test_data import TextMessages
+from test_data.test_data import TextMessages, CabinetLogin
 
 
 class MemorableCoinsPage:
@@ -21,34 +22,61 @@ class MemorableCoinsPage:
 
     def coin_picker(self, coin_name: str):
         global icon_button
+        login_page = LoginPage(self.driver)
         try:
-            items = self.driver.find_elements(*self.product_item)
-            self.log.info("The list of elements was detected successfully")
-            locator_index = 1
-            for item in items:
-                try:
-                    item_element = item.find_element(By.XPATH, self.child_text_item).text
-                    if coin_name in item_element:
-                        t_end = time.time() + 60 * 15
-                        while time.time() < t_end:
-                            product_item = self.driver.find_element(By.XPATH, self.picked_item + f"[{locator_index}]")
-                            hover = ActionChains(self.driver).move_to_element(product_item)
-                            hover.perform()
-                            try:
-                                icon_button = item.find_element(By.XPATH, self.child_bucket_icon_item)
-                            except (NoSuchElementException, StaleElementReferenceException):
-                                pass
-                            if icon_button.get_attribute('title'):
-                                self.driver.refresh()
-                            elif icon_button.get_attribute('title'):
-                                icon_button.click()
-                                break
-                    elif coin_name not in item_element:
-                        locator_index += 1
-                        continue
-                    else:
+            #brake_1_loop = False
+            while True:
+                items = self.driver.find_elements(*self.product_item)
+                self.log.info("The list of elements was detected successfully")
+                locator_index = 1
+                brake_2_loop = False
+                while True:
+                    for item in items:
+                        try:
+                            item_element = item.find_element(By.XPATH, self.child_text_item).text
+                            if coin_name in item_element:
+                                product_item = self.driver.find_element(By.XPATH,
+                                                                        self.picked_item + f"[{locator_index}]")
+                                hover = ActionChains(self.driver).move_to_element(product_item)
+                                hover.perform()
+                                try:
+                                    icon_button = item.find_element(By.XPATH, self.child_bucket_icon_item)
+                                except (NoSuchElementException, StaleElementReferenceException):
+                                    pass
+                                if icon_button.get_attribute('title'):
+                                    self.driver.refresh()
+                                    brake_2_loop = True
+                                    break
+                                else:
+                                    icon_button.click()
+                                    # проробити сценарій коли юзера викидає при спробі клікнути на кнопку купити
+                                    try:
+                                        if login_page.presence_of_login_page():
+                                            login_page.full_login_to_account(CabinetLogin.email, CabinetLogin.password)
+                                        else:
+                                            brake_2_loop = True
+                                            break
+                                    except NoSuchElementException:
+                                        pass
+                                    #self.click_on_basket(icon_button)
+
+                            elif coin_name not in item_element:
+                                locator_index += 1
+                                continue
+                        except (NoSuchElementException, StaleElementReferenceException) as error:
+                            self.log.info(
+                                f"Could not detect the {coin_name} in child web object due to {error} exception")
+                            brake_2_loop = True
+                            pass
+                    if brake_2_loop:
+                        #brake_1_loop = True
                         break
-                except NoSuchElementException as error:
-                    self.log.info(f"Could not detect the {coin_name} in child web object due to {error} exception")
+                #if brake_1_loop:
+                #reak
         except NoSuchElementException as error:
             self.log.info(f"Could not detect the list of elements due to {error}")
+            pass
+
+    def click_on_basket(self, locator):
+        element = self.driver.find_element(By, locator)
+        self.driver.execute_script("arguments[0].click();", element)
