@@ -1,4 +1,5 @@
 import time
+
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver import ActionChains
@@ -7,7 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from page_obects.login_page import LoginPage
 from service_utils.utilities import ServiceUtils
-from test_data.test_data import TextMessages, CabinetLogin
+from test_data.test_data import CabinetLogin
 
 
 class MemorableCoinsPage:
@@ -27,6 +28,7 @@ class MemorableCoinsPage:
         login_page = LoginPage(self.driver)
         try:
             brake_1_loop = False
+            brake_1_loop_second_condition = False
             while True:
                 items = self.driver.find_elements(*self.product_item)
                 self.log.info("The list of elements was detected successfully")
@@ -49,14 +51,16 @@ class MemorableCoinsPage:
                                     pass
                                 if icon_button.get_attribute('title'):
                                     self.driver.refresh()
+                                    time.sleep(0.05)
                                     self.log.info("Page was refreshed")
                                     brake_2_loop = True
+                                    brake_1_loop_second_condition = False
                                     break
                                 else:
                                     self.click(self.child_bucket_icon_item)
                                     self.log.info("The basket button was pressed successfully")
                                     try:
-                                        wait = WebDriverWait(self.driver, 600)
+                                        wait = WebDriverWait(self.driver, 180)
                                         wait.until(EC.visibility_of_element_located((By.XPATH, self.bucket_popup_window)))
                                         time.sleep(30)
                                     except NoSuchElementException as error:
@@ -67,10 +71,12 @@ class MemorableCoinsPage:
                                             self.log.info("The login page detected")
                                             login_page.full_login_to_account(CabinetLogin.email_o, CabinetLogin.password_o)
                                             self.log.info("The user logged successfully")
-                                            brake_2_loop = False
+                                            brake_2_loop = True
+                                            brake_1_loop_second_condition = True
                                             break
                                     except NoSuchElementException:
                                         brake_2_loop = True
+                                        brake_1_loop_second_condition = True
                                         self.log.info("User remains on the Memorable coins page")
                                         break
                             elif coin_name not in item_element:
@@ -84,7 +90,7 @@ class MemorableCoinsPage:
                     if brake_2_loop:
                         brake_1_loop = True
                         break
-                if brake_1_loop:
+                if brake_1_loop and brake_1_loop_second_condition:
                     break
         except NoSuchElementException as error:
             self.log.info(f"Could not detect the list of elements due to {error}")

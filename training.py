@@ -22,7 +22,7 @@ login_page.input_email(CabinetLogin.email_o)
 login_page.input_password(CabinetLogin.password_o)
 login_page.press_login_button()
 home_page.click_memorable_coins_tub()
-home_page.memorable_coins_page.coin_picker('"Черепаха"')   #Крапля життя , '"Черепаха"'
+home_page.memorable_coins_page.coin_picker('"Черепаха"')   #Крапля життя , '"Черепаха"', 'Орьнек'
 coin_page = CoinPage(driver)
 #coin_page.click_on_buy_button()
 # login_page.press_register_button()
