@@ -74,3 +74,7 @@ class LoginPage:
         login_button = self.driver.find_element(*self.login_button)
         if email and password and login_button:
             return True
+
+    def click(self, locator):
+        element = self.driver.find_element(By.XPATH, locator)
+        self.driver.execute_script("arguments[0].click();", element)

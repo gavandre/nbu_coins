@@ -48,7 +48,7 @@ class MemorableCoinsPage:
                                     brake_2_loop = True
                                     break
                                 else:
-                                    icon_button.click()
+                                    self.click(self.child_bucket_icon_item)
                                     # проробити сценарій коли юзера викидає при спробі клікнути на кнопку купити
                                     try:
                                         if login_page.presence_of_login_page():
@@ -58,8 +58,6 @@ class MemorableCoinsPage:
                                             break
                                     except NoSuchElementException:
                                         pass
-                                    #self.click_on_basket(icon_button)
-
                             elif coin_name not in item_element:
                                 locator_index += 1
                                 continue
@@ -72,11 +70,11 @@ class MemorableCoinsPage:
                         #brake_1_loop = True
                         break
                 #if brake_1_loop:
-                #reak
+                #break
         except NoSuchElementException as error:
             self.log.info(f"Could not detect the list of elements due to {error}")
             pass
 
-    def click_on_basket(self, locator):
-        element = self.driver.find_element(By, locator)
+    def click(self, locator):
+        element = self.driver.find_element(By.XPATH, locator)
         self.driver.execute_script("arguments[0].click();", element)
