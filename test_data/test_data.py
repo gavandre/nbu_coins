@@ -8,6 +8,9 @@ class CabinetLogin:
     email = "gavandre@gmail.com"
     password = "MyF@ther1959"
 
+    email_o = "roikalena.prosto@gmail.com"
+    password_o = "uQbehzognu@1"
+
 
 class TextMessages:
     message = "Вибачте товару немає в достатній кількості, або вичерпаний ліміт"

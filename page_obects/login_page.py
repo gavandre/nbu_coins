@@ -11,6 +11,7 @@ class LoginPage:
     password_field = (By.CSS_SELECTOR, "#password")
     register_button = (By.CSS_SELECTOR, ".btn.btn-success.bank-registration")
     login_button = (By.CSS_SELECTOR, "button[class='btn btn-default']")
+    login_button_click = "button[class='btn btn-default']"
     return_button = (By.XPATH, "//div[@class='return_main_page']//*[name()='svg']")
 
     def __init__(self, driver):
@@ -55,8 +56,7 @@ class LoginPage:
 
         """
         try:
-            result = self.driver.find_element(*self.register_button)
-            result.click()
+            self.click(self.login_button_click)
             self.log.info("Register button was pressed successfully")
             return OperationResult.SUCCESS
         except NoSuchElementException as error:
@@ -76,5 +76,5 @@ class LoginPage:
             return True
 
     def click(self, locator):
-        element = self.driver.find_element(By.XPATH, locator)
+        element = self.driver.find_element(By.CSS_SELECTOR, locator)
         self.driver.execute_script("arguments[0].click();", element)
