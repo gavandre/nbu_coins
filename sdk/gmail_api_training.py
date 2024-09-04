@@ -1,12 +1,15 @@
 # Importing os and pickle module in program
+import base64
 import os
 import pickle
+
+from bs4 import BeautifulSoup
 # Creating utils for Gmail APIs
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 # Importing libraries for encoding/decoding messages in base64
-from base64 import urlsafe_b64decode, urlsafe_b64encode
+from base64 import urlsafe_b64encode
 # Importing libraries for dealing with the attachment of MIME types in Gmail
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -15,13 +18,14 @@ from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from mimetypes import guess_type as guess_mime_type
+
 # Request all access from Gmail APIs and project
 SCOPES = ['https://mail.google.com/']
 OurEmailID = 'andy.havr1988@gmail.com'  # giving our Gmail Id
 
 
 # using a default function to authenticate Gmail APIs
-def authenticateGmailAPIs():
+def authenticate_gmail_apis():
     creds = None
     # Authorizing the Gmail APIs with tokens of pickles
     if os.path.exists("token.pickle"):  # using if else statement
@@ -43,7 +47,47 @@ def authenticateGmailAPIs():
 
 
 # Get the Gmail API service by calling the function
-ServicesGA = authenticateGmailAPIs()
+ServicesGA = authenticate_gmail_apis()
+
+
+def read_email(gmail_connection):
+    global code
+    service = gmail_connection
+    result = service.users().messages().list(userId='me').execute()
+    messages = result.get('messages')
+    for msg in messages:
+        # Get the message from its id
+        txt = service.users().messages().get(userId='me', id=msg['id']).execute()
+
+        # Use try-except to avoid any Errors
+        try:
+            # Get value of 'payload' from dictionary 'txt'
+            payload = txt['payload']
+            headers = payload['headers']
+
+            # Look for Subject and Sender Email in the headers
+            for d in headers:
+                # if d['name'] == 'Subject':
+                #     subject = d['test']
+                if d['name'] == 'From' and "gavandre@gmail.com" in d['value']:
+                    sender = d['value']
+
+                    # The Body of the message is in Encrypted format. So, we have to decode it.
+            # Get the data and decode it with base 64 decoder.
+            parts = payload.get('parts')[0]
+            data = parts['body']['data']
+            data = data.replace("-", "+").replace("_", "/")
+            decoded_data = base64.b64decode(data)
+
+            # Now, the data obtained is in lxml. So, we will parse
+            # it with BeautifulSoup library
+            soup = BeautifulSoup(decoded_data, "lxml")
+            body = str(soup.body())
+            otp_code = [int(i) for i in body if i.isdigit()]
+            code = "".join(str(x) for x in otp_code)
+        except:
+            pass
+        return code
 
 
 # Using a default funnction to add attachments in Mail
@@ -103,6 +147,8 @@ def SendMail(ServicesGA, RecieverMail, SubofMail, BodyofMail, attachments=[]):
 
 
 # Sending an email by adding important content, i.e., Reciever's mail, Subject, Body, etc.
-SendMail(ServicesGA, "gavandre@gmail.com", "Тестове повідомлення. Якщо це повідомлення прийде, то ти Андрій трохи молодець, і щось таки розібрався",
-         "Так ти так розібрався і успішно надіслав емейл через API", ["test.txt",
-        "client_secret_481384250289-t3ob9spl2p37hn8j26okm18ji299pj5j.apps.googleusercontent.com.json"])  # calling out default SendMail() function
+# SendMail(ServicesGA, "gavandre@gmail.com", "Test", "Test API", ["test.txt",
+# "client_secret_481384250289-t3ob9spl2p37hn8j26okm18ji299pj5j.apps.googleusercontent.com.json"])
+# calling out default SendMail() function
+
+read_email(authenticate_gmail_apis())
