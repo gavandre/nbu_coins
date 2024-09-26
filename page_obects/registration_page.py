@@ -8,6 +8,10 @@ class RegistrationPage:
     fathers_name_field = (By.CSS_SELECTOR, "input[placeholder='По батькові*']")
     email_field = (By.CSS_SELECTOR, "#email_address")
     receive_code_button = (By.XPATH, "(//div[@id='email-verification-link'])[1]")
+    phone_number_field = (By.XPATH, "(//input[@id='telephone'])[1]")
+    password_field = (By.XPATH, "(//input[@id='password'])[1]")
+    confirm_password_field = (By.XPATH, "(//input[@id='confirmation'])[1]")
+    toggle = (By.CSS_SELECTOR, "label[for='shoprules']")
 
     def __init__(self, driver):
         self.driver = driver
@@ -26,3 +30,15 @@ class RegistrationPage:
 
     def press_receive_code_button(self):
         self.driver.find_element(*self.receive_code_button).click()
+
+    def input_phone_number(self, value: str):
+        self.driver.find_element(*self.phone_number_field).send_keys(value)
+
+    def input_password_filed(self, value: str):
+        self.driver.find_element(*self.password_field).send_keys(value)
+
+    def input_confirmed_password(self, value: str):
+        self.driver.find_element(*self.confirm_password_field).send_keys(value)
+
+    def click_on_confirmation_toggle(self):
+        self.driver.find_element(*self.toggle).click()
