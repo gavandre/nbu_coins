@@ -9,7 +9,8 @@ from service_utils.utilities import ServiceUtils
 class LoginPage:
     email_field = (By.CSS_SELECTOR, "input[placeholder='E-Mail:']")
     password_field = (By.CSS_SELECTOR, "#password")
-    register_button = (By.CSS_SELECTOR, ".btn.btn-success.bank-registration")
+    #register_button = (By.CSS_SELECTOR, ".btn.btn-success.bank-registration")
+    register_button = ".btn.btn-success.bank-registration"
     login_button = (By.CSS_SELECTOR, "button[class='btn btn-default']")
     login_button_click = "button[class='btn btn-default']"
     return_button = (By.XPATH, "//div[@class='return_main_page']//*[name()='svg']")
@@ -56,7 +57,7 @@ class LoginPage:
 
         """
         try:
-            self.click(self.login_button_click)
+            self.click(self.register_button)
             self.log.info("Register button was pressed successfully")
             return OperationResult.SUCCESS
         except NoSuchElementException as error:

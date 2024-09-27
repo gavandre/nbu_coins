@@ -12,6 +12,7 @@ class RegistrationPage:
     password_field = (By.XPATH, "(//input[@id='password'])[1]")
     confirm_password_field = (By.XPATH, "(//input[@id='confirmation'])[1]")
     toggle = (By.CSS_SELECTOR, "label[for='shoprules']")
+    re_captcha = (By.XPATH, "//div[@class='g-recaptcha']")
 
     def __init__(self, driver):
         self.driver = driver
@@ -42,3 +43,6 @@ class RegistrationPage:
 
     def click_on_confirmation_toggle(self):
         self.driver.find_element(*self.toggle).click()
+
+    def click_on_recaptcha(self):
+        self.driver.find_element(*self.re_captcha).click()
