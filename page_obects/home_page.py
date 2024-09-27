@@ -38,6 +38,8 @@ class HomePage(Page):
             self.log.info("The cabinet icon was clicked successfully")
         except NoSuchElementException as error:
             self.log.info(f"Could not click on cabinet icon due to {error} exception")
+            #login_page = LoginPage(driver)
+            return
 
     def click_memorable_coins_tub(self):
         try:

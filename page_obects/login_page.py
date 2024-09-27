@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 from page_obects.registration_page import RegistrationPage
 from sdk.constants import OperationResult
-from service_utils.utilities import ServiceUtils
+from service_utils.utilities import ServiceUtils, WebDriverManager
 
 
 class LoginPage:
@@ -14,6 +14,7 @@ class LoginPage:
     login_button = (By.CSS_SELECTOR, "button[class='btn btn-default']")
     login_button_click = "button[class='btn btn-default']"
     return_button = (By.XPATH, "//div[@class='return_main_page']//*[name()='svg']")
+    driver = WebDriverManager().get_driver()
 
     def __init__(self, driver):
         self.driver = driver
@@ -56,13 +57,11 @@ class LoginPage:
             login_page.press_register_button()
 
         """
-        try:
-            self.click(self.register_button)
-            self.log.info("Register button was pressed successfully")
-            return OperationResult.SUCCESS
-        except NoSuchElementException as error:
-            self.log.info("Could not press Register button")
-            return OperationResult.FAILURE
+        self.click(self.register_button)
+        self.log.info("Register button was pressed successfully")
+        register_page = RegistrationPage(self.driver)
+        return register_page
+
 
     def full_login_to_account(self, email, password):
         self.input_email(email)
