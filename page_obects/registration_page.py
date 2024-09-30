@@ -1,8 +1,9 @@
+from pypom import Page
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 
-class RegistrationPage:
+class RegistrationPage(Page):
     lastname_field = (By.CSS_SELECTOR, "input[placeholder='Прізвище*']")
     name_field = (By.XPATH, "(//input)[12]")
     fathers_name_field = (By.CSS_SELECTOR, "input[placeholder='По батькові*']")
@@ -16,6 +17,7 @@ class RegistrationPage:
 
     def __init__(self, driver):
         self.driver = driver
+        super().__init__()
 
     def input_lastname(self, value: str):
         self.driver.find_element(*self.lastname_field).send_keys(value)
