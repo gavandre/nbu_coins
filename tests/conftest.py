@@ -6,7 +6,6 @@ import pytest
 
 @pytest.fixture()
 def setup_teardown(request):
-    global driver
     browser_name = request.config.getoption("browser_name")
     if browser_name == "chrome":
         chromedriver_autoinstaller.install()
@@ -15,7 +14,8 @@ def setup_teardown(request):
         geckodriver_autoinstaller.install()
         driver = webdriver.Firefox()
     driver.implicitly_wait(8)
+    driver.maximize_window()
     driver.get("https://coins.bank.gov.ua/")
     request.cls.driver = driver
-    yield
+    yield driver
     driver.quit()
