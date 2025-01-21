@@ -20,7 +20,7 @@ class RegistrationPage(Page):
     def __init__(self, driver):
         self.driver = driver
         self.log = ServiceUtils.get_logger()
-        super().__init__()
+        #super().__init__()
 
     def input_lastname(self, value: str) -> None:
         """
