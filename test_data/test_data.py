@@ -5,11 +5,11 @@ class CabinetRegistration:
 
 class CabinetLogin:
     url = "https://coins.bank.gov.ua/"
-    email = "gavandre@gmail.com"
-    password = "MyF@ther1959"
+    email = "xxx"
+    password = "xxx"
 
-    email_o = "roikalena.prosto@gmail.com"
-    password_o = "uQbehzognu@1"
+    email_o = "xxx"
+    password_o = "xxx"
 
 
 class TextMessages:
